@@ -1,0 +1,140 @@
+<p>It took me a long time to understand what a static member/function is, why and when I should use it. Then I found a really nice example to use it.</p>
+
+<h2 id="creating-a-toy-class">Creating a toy class</h2>
+
+<p>Let’s create small code where we will emulate a service with users. We want to know at any time how many users we have, how can we do that?</p>
+
+<h4 id="code-for-the-user-class">Code for the <code class="language-plaintext highlighter-rouge">user</code> class:</h4>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">User</span><span class="p">{</span>
+
+	<span class="nl">public:</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+
+		<span class="n">User</span><span class="p">(){</span> <span class="c1">// Constr</span>
+
+		<span class="p">};</span>
+
+		<span class="o">~</span><span class="n">User</span><span class="p">(){</span>  <span class="c1">//Destr</span>
+
+		<span class="p">};</span>
+<span class="p">};</span>
+
+</code></pre></div></div>
+
+<h4 id="counting-the-users-in-the-main-function">Counting the users in the main function:</h4>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="kt">int</span> <span class="n">user_counter</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">;</span>
+	<span class="n">User</span> <span class="n">user1</span><span class="p">,</span> <span class="n">user2</span><span class="p">;</span>
+
+	<span class="n">user2</span><span class="p">.</span><span class="o">~</span><span class="n">User</span><span class="p">();</span>
+	<span class="n">user_counter</span><span class="o">--</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is not a good solution, I would have to count every time I create/delete a new user by hand. Wouldn’t it be nice to make c++ count for us? This is why we want to use a single variable inside the class to count: This is a static variable.</p>
+
+<h2 id="creating-the-user-class-with-a-static-counter">Creating the <code class="language-plaintext highlighter-rouge">user</code> class with a static counter</h2>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">User</span><span class="p">{</span>
+
+	<span class="k">static</span> <span class="kt">int</span> <span class="n">user_counter</span><span class="p">;</span>
+	<span class="nl">public:</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+
+		<span class="n">User</span><span class="p">(){</span> <span class="c1">// Constr</span>
+			<span class="n">user_counter</span><span class="o">++</span><span class="p">;</span>
+		<span class="p">};</span>
+
+		<span class="o">~</span><span class="n">User</span><span class="p">(){</span>  <span class="c1">//Destr</span>
+			<span class="n">user_counter</span><span class="o">--</span><span class="p">;</span>
+		<span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Now, the <code class="language-plaintext highlighter-rouge">user_counter</code> value goes up/down when the constructor/destructor is called.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="n">User</span> <span class="n">user1</span><span class="p">,</span> <span class="n">user2</span><span class="p">;</span> <span class="c1">//user_counter = 2 </span>
+	<span class="n">user2</span><span class="p">.</span><span class="o">~</span><span class="n">User</span><span class="p">();</span> <span class="c1">//user_counter = 1</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h2 id="how-do-we-access-this-static-counter-static-functions">How do we access this static counter?: Static Functions</h2>
+
+<p>“Normal” functions can’t access static variables, and it makes sense since these variables are global to every instance of the class, i.e. the number of users can’t be accessed easily as it’s shared by everyone.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">User</span><span class="p">{</span>
+
+	<span class="k">static</span> <span class="kt">int</span> <span class="n">user_counter</span><span class="p">;</span>
+	<span class="nl">public:</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+
+		<span class="k">static</span> <span class="kt">int</span> <span class="n">get_user_count</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">user_counter</span><span class="p">;}</span>
+
+		<span class="n">User</span><span class="p">(){</span> <span class="c1">// Constr</span>
+			<span class="n">user_counter</span><span class="o">++</span><span class="p">;</span>
+		<span class="p">};</span>
+
+		<span class="o">~</span><span class="n">User</span><span class="p">(){</span>  <span class="c1">//Destr</span>
+			<span class="n">user_counter</span><span class="o">--</span><span class="p">;</span>
+		<span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>Great, but  how do i initiate the <code class="language-plaintext highlighter-rouge">user_counter</code> variable? It’s a shared variable, so we can’t simply write <code class="language-plaintext highlighter-rouge">static int user_counter = 0</code> inside the user class, so need to initiate outside of it!</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//Below the User class</span>
+<span class="kt">int</span> <span class="n">User</span><span class="o">::</span><span class="n">user_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> 
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">User</span><span class="o">::</span><span class="n">get_user_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+	<span class="n">User</span> <span class="n">user1</span><span class="p">,</span> <span class="n">user2</span><span class="p">;</span> <span class="c1">//user_counter = 2</span>
+
+	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">User</span><span class="o">::</span><span class="n">get_user_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+	<span class="n">user2</span><span class="p">.</span><span class="o">~</span><span class="n">User</span><span class="p">();</span> <span class="c1">//user_counter = 1</span>
+
+	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">User</span><span class="o">::</span><span class="n">get_user_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>	
+<span class="p">}</span>
+
+<span class="mi">0</span>
+<span class="mi">2</span>
+<span class="mi">1</span>
+
+</code></pre></div></div>
+
+<p>The full working code:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">User</span><span class="p">{</span>
+
+	<span class="k">static</span> <span class="kt">int</span> <span class="n">user_counter</span><span class="p">;</span>
+	<span class="nl">public:</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+
+		<span class="k">static</span> <span class="kt">int</span> <span class="n">get_user_count</span><span class="p">()</span> <span class="p">{</span><span class="k">return</span> <span class="n">user_counter</span><span class="p">;}</span>
+
+		<span class="n">User</span><span class="p">(){</span> <span class="c1">// Constr</span>
+			<span class="n">user_counter</span><span class="o">++</span><span class="p">;</span>
+		<span class="p">};</span>
+
+		<span class="o">~</span><span class="n">User</span><span class="p">(){</span>  <span class="c1">//Destr</span>
+			<span class="n">user_counter</span><span class="o">--</span><span class="p">;</span>
+		<span class="p">};</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">User</span><span class="o">::</span><span class="n">user_counter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> 
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">User</span><span class="o">::</span><span class="n">get_user_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+	<span class="n">User</span> <span class="n">user1</span><span class="p">,</span> <span class="n">user2</span><span class="p">;</span> <span class="c1">//user_counter = 2</span>
+
+	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">User</span><span class="o">::</span><span class="n">get_user_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+	<span class="n">user2</span><span class="p">.</span><span class="o">~</span><span class="n">User</span><span class="p">();</span> <span class="c1">//user_counter = 1</span>
+
+	<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">User</span><span class="o">::</span><span class="n">get_user_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>	
+<span class="p">}</span>
+</code></pre></div></div>
+

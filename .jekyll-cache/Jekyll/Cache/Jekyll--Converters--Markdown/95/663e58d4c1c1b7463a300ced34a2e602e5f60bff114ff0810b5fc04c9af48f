@@ -1,0 +1,74 @@
+I"C<p>CTF (Catch the Flag) in the programming world is a competition where you hack/solve puzzles in order to get a code to get the next puzzle. You might to use several tricks and a plenty of imagination to get something like this: <code class="language-plaintext highlighter-rouge">CTF{This_is_how_flags_usually_look_like}</code>.</p>
+
+<p>A really nice introduction to what CTF competition is  <a href="https://www.youtube.com/watch?v=BFMmSJ3PRZM">LiveOverflow YouTube Channel</a> with their pros and cons. I took the Google CTF Beginners Quest 2021,  I have learned some interesting stuff so I wanted to make a post detailing some of them.</p>
+
+<p>You can go and check this CFT at <a href="https://capturetheflag.withgoogle.com/beginners-quest">https://capturetheflag.withgoogle.com/beginners-quest</a>.</p>
+
+<h2 id="task-1">Task 1:</h2>
+
+<p>Get the password for this website <a href="https://cctv-web.2021.ctfcompetition.com/">https://cctv-web.2021.ctfcompetition.com/</a>, this is what it looks like.</p>
+
+<p><img src="/media/task1nopass.png" alt="This is website" title="This is website" /></p>
+
+<p>Check the inspect the html code using your favorite web browser. You get the following code:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">checkPassword</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">v</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">password</span><span class="dl">"</span><span class="p">).</span><span class="nx">value</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">p</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="nx">v</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="nx">a</span> <span class="o">=&gt;</span> <span class="mh">0xCafe</span> <span class="o">+</span> <span class="nx">a</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+
+  <span class="k">if</span><span class="p">(</span><span class="nx">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">===</span> <span class="mi">52037</span> <span class="o">&amp;&amp;</span>
+     <span class="nx">p</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">===</span> <span class="mi">52081</span> <span class="o">&amp;&amp;</span>
+     <span class="nx">p</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">===</span> <span class="mi">52063</span> <span class="o">&amp;&amp;</span>
+     <span class="nx">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">===</span> <span class="mi">52077</span> <span class="o">&amp;&amp;</span>
+     <span class="nx">p</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">===</span> <span class="mi">52077</span> <span class="o">&amp;&amp;</span>
+     <span class="nx">p</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">===</span> <span class="mi">52080</span> <span class="o">&amp;&amp;</span>
+     <span class="nx">p</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">===</span> <span class="mi">52046</span> <span class="o">&amp;&amp;</span>
+     <span class="nx">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">===</span> <span class="mi">52066</span> <span class="o">&amp;&amp;</span>
+     <span class="nx">p</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">===</span> <span class="mi">52085</span> <span class="o">&amp;&amp;</span>
+     <span class="nx">p</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">===</span> <span class="mi">52081</span> <span class="o">&amp;&amp;</span>
+     <span class="nx">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">===</span> <span class="mi">52077</span> <span class="o">&amp;&amp;</span>
+     <span class="nx">p</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">===</span> <span class="mi">52066</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nx">v</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">.html</span><span class="dl">"</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="dl">"</span><span class="s2">Wrong password!</span><span class="dl">"</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p>We enter the code and the program stores it inside the <code class="language-plaintext highlighter-rouge">const v</code>, then the code transforms the characters into integer values after adding <code class="language-plaintext highlighter-rouge">0xCafe</code>. To obtain the password, we need to check what values are stored in the <code class="language-plaintext highlighter-rouge">p[i]</code>: Python is our friend.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import numpy as np
+
+# Checking the code, we need at least 12 values
+
+p = np.zeros(12)
+
+p[0] = 52037
+p[6] = 52081
+p[5] = 52063
+p[1] = 52077
+p[9] = 52077
+p[10]= 52080
+p[4] = 52046
+p[3] = 52066
+p[8] = 52085
+p[7] = 52081
+p[2] = 52077 
+p[11]= 52066 #12 values
+
+#Convert 0xCafe to integer value
+#16 is the ASCII base, represented by '0x'
+offset = int('0xCafe',16) 
+
+p -=  offset # Deletes the offset 
+
+for i in p: 
+     # Print the password
+     print(chr(int(i)), end="")
+
+</code></pre></div></div>
+
+<p>And the password is <code class="language-plaintext highlighter-rouge">GoodPassword</code>, it takes you to a new page with the flag at the bottom.</p>
+
+<p><img src="/media/task1pass.png" alt="This is website" title="This is website" /></p>
+:ET

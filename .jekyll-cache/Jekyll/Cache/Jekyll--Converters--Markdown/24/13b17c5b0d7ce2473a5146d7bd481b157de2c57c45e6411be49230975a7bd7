@@ -1,0 +1,23 @@
+I"Á<h2 id="join-vs-right-join-vs-left-join">JOIN vs. RIGHT JOIN vs. LEFT JOIN</h2>
+
+<ul>
+  <li>(INNER) JOIN: Returns records that have matching values in both tables</li>
+</ul>
+
+<p><img src="/media/inner_join.png" alt="This is website" title="This is website" /></p>
+
+<ul>
+  <li>
+    <p>LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table</p>
+  </li>
+  <li>
+    <p>RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table</p>
+  </li>
+  <li>
+    <p>FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table</p>
+  </li>
+</ul>
+
+<h2 id="having-vs-where">HAVING vs. WHERE</h2>
+
+:ET

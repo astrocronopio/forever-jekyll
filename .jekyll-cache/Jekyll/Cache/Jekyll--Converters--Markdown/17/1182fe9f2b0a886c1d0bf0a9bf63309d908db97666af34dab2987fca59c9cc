@@ -1,0 +1,39 @@
+I"�<blockquote>
+  <h2 id="finetuning-bert-to-classify-toxic-comments-v-01">Finetuning BERT to classify toxic comments [v 0.1]</h2>
+  <p><a href="https://colab.research.google.com/drive/1VrCIa6kskG0IA2wCYG13t7peJU7V0PfW?usp=sharing">This is a Google Colab notebook</a> I made using a Coursera Project to get started with Transformers and some of their uses. I plan to build a API for this webpage in next versions.</p>
+</blockquote>
+
+<blockquote>
+  <h2 id="this-webpage-source-code">This webpage source code:</h2>
+  <p>Made using Jekyll. 
+<a href="https://github.com/astrocronopio/astrocronopio.github.io">Here</a> is my version, and this is the original <a href="https://github.com/sharu725/dark-side">repo</a> in Github.</p>
+</blockquote>
+
+<blockquote>
+  <h2 id="code-i-wrote-while-studying-and-teaching">Code I wrote while studying and teaching</h2>
+  <p><a href="https://evecoronel.com/gitgraduate.html">This post</a> has a list of some repositories while I was studying and teaching ML, also it has some C++ I wrote during my masters.</p>
+</blockquote>
+
+<hr />
+<h3 id="what-tools-i-use">What tools I use</h3>
+<blockquote>
+  <p>I like using Unix to code using differents tools (listed below) to write machine learning algorithms (moslty deep learning CV) and to do data analysis in large datasets.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>Machine Learning Frameworks:</strong> Tensorflow, PyTorch &amp; Scikit Learn. <br />
+<strong>Programming Languages:</strong> Python, C++, Linux Shell Scripting (bash &amp; awk).<br />
+<strong>Packages/Frameworks I’m usually use:</strong> Numpy, Matplotlib, Pandas, LaTeX, Gnuplot. <br /></p>
+</blockquote>
+
+<h3 id="what-im-currently-learning">What I’m currently learning</h3>
+<blockquote>
+  <ul>
+    <li>Docker &amp; Servers (MS SQL Server)</li>
+    <li>About Transformers in Hugging Face.</li>
+    <li>AWS: I want to implement my networks in the cloud instead of using my local machine.</li>
+  </ul>
+</blockquote>
+
+<hr />
+:ET

@@ -1,0 +1,86 @@
+I"�<p>Kadane’s Algorithm is used to obtain the maximum subarray sum, as seen in the <a href="https://leetcode.com/problems/maximum-subarray/">Leetcode 53. Maximum Subarray</a>:</p>
+
+<blockquote>
+  <p>Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.<br />
+A subarray is a contiguous part of an array.
+Example:
+<strong>Input</strong>: nums = [-2,1,-3,4,-1,2,1,-5,4]<br />
+<strong>Output</strong>: 6<br />
+<strong>Explanation</strong>: [4,-1,2,1] has the largest sum = 6.<br /></p>
+</blockquote>
+
+<h2 id="brute-force-approach">Brute-force Approach</h2>
+
+<p>Let’s take the example array:</p>
+
+<blockquote>
+  <p>[-2,1,-3,4,-1,2,1,-5,4]</p>
+</blockquote>
+
+<p>We can solve the problem via <strong>brute-force</strong> but it goes as  $O(n²)$:</p>
+
+<pre><code class="language-python=">def maxSubArray(self, nums: List[int]) -&gt; int:
+    best_sum = 0
+    current_sum = 0
+    
+    if len(nums)==1: return nums[0]
+        
+    for i,x in enumerate(nums):
+        current_sum=x
+        for  y in nums[i+1:]:
+            current_sum = current_sum + y
+            if current_sum&gt;best_sum:
+                best_sum = current_sum
+
+    return best_sum    
+</code></pre>
+
+<p>Basically, we calculate the following sums:</p>
+
+<blockquote>
+  <p>Fix the first value: -2
+1.1: -2+1 = -1 &lt;- best_sum
+1.2: -2+1-3 = -4
+1.3: -2+1-3+4 = 0 &lt;- best_sum
+1.4: -2+1-3+4-1 = -1
+….
+Fix the fourth value: 4
+4.1: 4-1 = 3
+4.2: 4-1+2 = 5 &lt;- best_sum
+4.3: 4-1+2+1 = 6 &lt;-  best_sum, this won’t change
+….</p>
+</blockquote>
+
+<h2 id="about-kadane">About Kadane:</h2>
+
+<p><a href="https://www.stat.cmu.edu/~kadane/">Joseph Kadane</a> is a mathematician that provided this algorithm to solve the maximum subarray sum problem in $O(n)$ time complexity:</p>
+
+<pre><code class="language-python=">def maxSubarraySum(numbers: List[int]) -&gt; int:
+    best_sum = nums[0]
+    current_sum = nums[0]
+
+    for x in nums[1:]:
+        current_sum = max(x, current_sum + x)
+        best_sum = max(best_sum, current_sum)
+    return best_sum
+</code></pre>
+
+<p>Easy? Not easy for me. Let’s dig deeper into why it works.</p>
+
+<p>The full sum array: Fix the first value: -2</p>
+<ol>
+  <li>$-2+1 = -1$ $\rightarrow$ The second value $1$  alone has a higher sum than $-2+1$, therefore we ditch the $-2$ and we begin counting from $1$ for a new subarray, <code class="language-plaintext highlighter-rouge">current_sum=1</code>, <code class="language-plaintext highlighter-rouge">best_sum=1</code></li>
+  <li>$1-3 = -2$ $\rightarrow$ The third value is lower than the sum with the previous <code class="language-plaintext highlighter-rouge">current_value</code> ($-2&gt;-3$), we continue a new subarray from last step. <code class="language-plaintext highlighter-rouge">current_sum=-2</code>, <code class="language-plaintext highlighter-rouge">best_sum=1</code></li>
+  <li>$1-3+4 = 2$ $\rightarrow$  The 4th value updates the <code class="language-plaintext highlighter-rouge">current_value</code> to $4$ and the <code class="language-plaintext highlighter-rouge">best_value</code> to $4$. This resets the subarray we were adding because $4$ alone has a higher sum than $1-3+4$.</li>
+  <li>$4-1 = 1$ $\rightarrow$ <code class="language-plaintext highlighter-rouge">current_sum=1</code>, <code class="language-plaintext highlighter-rouge">best_sum=4</code></li>
+  <li>$4-1 + 2 = 5$ $\rightarrow$ <code class="language-plaintext highlighter-rouge">current_sum=5</code>, <code class="language-plaintext highlighter-rouge">best_sum=5</code></li>
+  <li>$4-1 + 2 + 1= 6$ $\rightarrow$ <code class="language-plaintext highlighter-rouge">current_sum=6</code>, <code class="language-plaintext highlighter-rouge">best_sum=6</code>, after this <code class="language-plaintext highlighter-rouge">best_sum</code> won’t be updated again.</li>
+  <li>$4-1 + 2 + 1 -1 = 5$ $\rightarrow$ <code class="language-plaintext highlighter-rouge">current_sum=5</code>, <code class="language-plaintext highlighter-rouge">best_sum=6</code></li>
+  <li>$4-1 + 2 + 1 -1 -5  = 0$ $\rightarrow$ <code class="language-plaintext highlighter-rouge">current_sum=0</code>, <code class="language-plaintext highlighter-rouge">best_sum=6</code></li>
+  <li>$4-1 + 2 + 1 -1 -5 + 4 = 4$ $\rightarrow$ <code class="language-plaintext highlighter-rouge">current_sum=4</code>, <code class="language-plaintext highlighter-rouge">best_sum=6</code></li>
+</ol>
+
+<p>If we had an extra number (less than 2), we would have to update the subarray we were adding.</p>
+
+<p>In general, in line 6 of the Kadane implementation we decide to switch to another subarray, this happens in step 2 and 3. Meanwhile, line 7 keeps the highest sum we got so far.</p>
+:ET

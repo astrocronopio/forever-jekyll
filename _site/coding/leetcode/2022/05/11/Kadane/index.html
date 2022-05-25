@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+<meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+
+<meta name="description" content="Kadane’s Algorithm is used to obtain the maximum subarray sum, as seen in the Leetcode 53. Maximum Subarray:
+
+
+  Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
+A subarray is a contiguous part of an array.
+Example:
+Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+Output: 6
+Explanation: [4,-1,2,1] has the largest sum = 6.
+
+
+Brute-force Approach
+
+Let’s take the example array:
+
+
+  [-2,1,-3,4,-1,2,1,-5,4]
+
+
+We can solve the problem via brute-force but it goes as  $O(n²)$:
+
+def maxSubArray(self, nums: List[int]) -&gt; int:
+    best_sum = 0
+    current_sum = 0
+    
+    if len(nums)==1: return nums[0]
+        
+    for i,x in enumerate(nums):
+        current_sum=x
+        for  y in nums[i+1:]:
+            current_sum = current_sum + y
+            if current_sum&gt;best_sum:
+                best_sum = current_sum
+
+    return best_sum    
+
+
+Basically, we calculate the following sums:
+
+
+  Fix the first value: -2
+1.1: -2+1 = -1 &lt;- best_sum
+1.2: -2+1-3 = -4
+1.3: -2+1-3+4 = 0 &lt;- best_sum
+1.4: -2+1-3+4-1 = -1
+….
+Fix the fourth value: 4
+4.1: 4-1 = 3
+4.2: 4-1+2 = 5 &lt;- best_sum
+4.3: 4-1+2+1 = 6 &lt;-  best_sum, this won’t change
+….
+
+
+About Kadane:
+
+Joseph Kadane is a mathematician that provided this algorithm to solve the maximum subarray sum problem in $O(n)$ time complexity:
+
+def maxSubarraySum(numbers: List[int]) -&gt; int:
+    best_sum = nums[0]
+    current_sum = nums[0]
+
+    for x in nums[1:]:
+        current_sum = max(x, current_sum + x)
+        best_sum = max(best_sum, current_sum)
+    return best_sum
+
+
+Easy? Not easy for me. Let’s dig deeper into why it works.
+
+The full sum array: Fix the first value: -2
+
+  $-2+1 = -1$ $\rightarrow$ The second value $1$  alone has a higher sum than $-2+1$, therefore we ditch the $-2$ and we begin counting from $1$ for a new subarray, current_sum=1, best_sum=1
+  $1-3 = -2$ $\rightarrow$ The third value is lower than the sum with the previous current_value ($-2&gt;-3$), we continue a new subarray from last step. current_sum=-2, best_sum=1
+  $1-3+4 = 2$ $\rightarrow$  The 4th value updates the current_value to $4$ and the best_value to $4$. This resets the subarray we were adding because $4$ alone has a higher sum than $1-3+4$.
+  $4-1 = 1$ $\rightarrow$ current_sum=1, best_sum=4
+  $4-1 + 2 = 5$ $\rightarrow$ current_sum=5, best_sum=5
+  $4-1 + 2 + 1= 6$ $\rightarrow$ current_sum=6, best_sum=6, after this best_sum won’t be updated again.
+  $4-1 + 2 + 1 -1 = 5$ $\rightarrow$ current_sum=5, best_sum=6
+  $4-1 + 2 + 1 -1 -5  = 0$ $\rightarrow$ current_sum=0, best_sum=6
+  $4-1 + 2 + 1 -1 -5 + 4 = 4$ $\rightarrow$ current_sum=4, best_sum=6
+
+
+If we had an extra number (less than 2), we would have to update the subarray we were adding.
+
+In general, in line 6 of the Kadane implementation we decide to switch to another subarray, this happens in step 2 and 3. Meanwhile, line 7 keeps the highest sum we got so far.
+" />
+<meta property="og:description" content="Kadane’s Algorithm is used to obtain the maximum subarray sum, as seen in the Leetcode 53. Maximum Subarray:
+
+
+  Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
+A subarray is a contiguous part of an array.
+Example:
+Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+Output: 6
+Explanation: [4,-1,2,1] has the largest sum = 6.
+
+
+Brute-force Approach
+
+Let’s take the example array:
+
+
+  [-2,1,-3,4,-1,2,1,-5,4]
+
+
+We can solve the problem via brute-force but it goes as  $O(n²)$:
+
+def maxSubArray(self, nums: List[int]) -&gt; int:
+    best_sum = 0
+    current_sum = 0
+    
+    if len(nums)==1: return nums[0]
+        
+    for i,x in enumerate(nums):
+        current_sum=x
+        for  y in nums[i+1:]:
+            current_sum = current_sum + y
+            if current_sum&gt;best_sum:
+                best_sum = current_sum
+
+    return best_sum    
+
+
+Basically, we calculate the following sums:
+
+
+  Fix the first value: -2
+1.1: -2+1 = -1 &lt;- best_sum
+1.2: -2+1-3 = -4
+1.3: -2+1-3+4 = 0 &lt;- best_sum
+1.4: -2+1-3+4-1 = -1
+….
+Fix the fourth value: 4
+4.1: 4-1 = 3
+4.2: 4-1+2 = 5 &lt;- best_sum
+4.3: 4-1+2+1 = 6 &lt;-  best_sum, this won’t change
+….
+
+
+About Kadane:
+
+Joseph Kadane is a mathematician that provided this algorithm to solve the maximum subarray sum problem in $O(n)$ time complexity:
+
+def maxSubarraySum(numbers: List[int]) -&gt; int:
+    best_sum = nums[0]
+    current_sum = nums[0]
+
+    for x in nums[1:]:
+        current_sum = max(x, current_sum + x)
+        best_sum = max(best_sum, current_sum)
+    return best_sum
+
+
+Easy? Not easy for me. Let’s dig deeper into why it works.
+
+The full sum array: Fix the first value: -2
+
+  $-2+1 = -1$ $\rightarrow$ The second value $1$  alone has a higher sum than $-2+1$, therefore we ditch the $-2$ and we begin counting from $1$ for a new subarray, current_sum=1, best_sum=1
+  $1-3 = -2$ $\rightarrow$ The third value is lower than the sum with the previous current_value ($-2&gt;-3$), we continue a new subarray from last step. current_sum=-2, best_sum=1
+  $1-3+4 = 2$ $\rightarrow$  The 4th value updates the current_value to $4$ and the best_value to $4$. This resets the subarray we were adding because $4$ alone has a higher sum than $1-3+4$.
+  $4-1 = 1$ $\rightarrow$ current_sum=1, best_sum=4
+  $4-1 + 2 = 5$ $\rightarrow$ current_sum=5, best_sum=5
+  $4-1 + 2 + 1= 6$ $\rightarrow$ current_sum=6, best_sum=6, after this best_sum won’t be updated again.
+  $4-1 + 2 + 1 -1 = 5$ $\rightarrow$ current_sum=5, best_sum=6
+  $4-1 + 2 + 1 -1 -5  = 0$ $\rightarrow$ current_sum=0, best_sum=6
+  $4-1 + 2 + 1 -1 -5 + 4 = 4$ $\rightarrow$ current_sum=4, best_sum=6
+
+
+If we had an extra number (less than 2), we would have to update the subarray we were adding.
+
+In general, in line 6 of the Kadane implementation we decide to switch to another subarray, this happens in step 2 and 3. Meanwhile, line 7 keeps the highest sum we got so far.
+" />
+
+<meta name="author" content="evelyn@home" />
+
+
+<meta property="og:title" content="Kadane's Algorithm & LeetCode 53 Maximum Subarray" />
+<meta property="twitter:title" content="Kadane's Algorithm & LeetCode 53 Maximum Subarray" />
+
+
+
+    <title>Kadane's Algorithm & LeetCode 53 Maximum Subarray – evelyn@home – Code & Miscellanea.</title>
+
+    <link rel="stylesheet" type="text/css" href="/style.css"/>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/ress/dist/ress.min.css"/>
+    <!-- <link rel="apple-touch-icon" sizes="57x57" href="/assets/image/favicon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/assets/image/favicon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/assets/image/favicon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/image/favicon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/assets/image/favicon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/image/favicon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/assets/image/favicon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/image/favicon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/image/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/image/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/image/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/image/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/image/favicon-192x192.png"> -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/image/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/assets/image/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <!-- <meta name="msapplication-TileImage" content="/assets/image/favicon-144x144.png"> -->
+    <meta name="msapplication-config" content="/assets/image/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="alternate" type="application/rss+xml" title="evelyn@home - Code & Miscellanea." href="/feed.xml"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css" integrity="sha256-XoaMnoYC5TH6/+ihMEnospgm0J1PM/nioxbOUdnM8HY=" crossorigin="anonymous" media="print" onload="this.media='all'"/>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.5/plyr.css" media="print" onload="this.media='all'"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" media="print" onload="this.media='all'"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET" crossorigin="anonymous" media="print" onload="this.media='all'"/>
+
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="/assets/image/avatar.png" width="70" height="70" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">evelyn@home</a></h1>
+            <p class="site-description">Code & Miscellanea.</p>
+          </div>
+          <nav class="nav-menu">
+            
+  <a class="nav-menu-item" href="/about">About</a>
+
+  <a class="nav-menu-item" href="/projects">Projects</a>
+
+  <a class="nav-menu-item" href="/media/Coronel-Resume.pdf">Resumé</a>
+
+  <a class="nav-menu-item" href="/contact.html">Contact</a>
+
+  <a class="nav-menu-item" href="/search">🔍</a>
+
+
+          </nav>
+        
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Kadane's Algorithm & LeetCode 53 Maximum Subarray</h1>
+
+  <div class="entry">
+    <p>Kadane’s Algorithm is used to obtain the maximum subarray sum, as seen in the <a href="https://leetcode.com/problems/maximum-subarray/">Leetcode 53. Maximum Subarray</a>:</p>
+
+<blockquote>
+  <p>Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.<br />
+A subarray is a contiguous part of an array.
+Example:
+<strong>Input</strong>: nums = [-2,1,-3,4,-1,2,1,-5,4]<br />
+<strong>Output</strong>: 6<br />
+<strong>Explanation</strong>: [4,-1,2,1] has the largest sum = 6.<br /></p>
+</blockquote>
+
+<h2 id="brute-force-approach">Brute-force Approach</h2>
+
+<p>Let’s take the example array:</p>
+
+<blockquote>
+  <p>[-2,1,-3,4,-1,2,1,-5,4]</p>
+</blockquote>
+
+<p>We can solve the problem via <strong>brute-force</strong> but it goes as  $O(n²)$:</p>
+
+<pre><code class="language-python=">def maxSubArray(self, nums: List[int]) -&gt; int:
+    best_sum = 0
+    current_sum = 0
+    
+    if len(nums)==1: return nums[0]
+        
+    for i,x in enumerate(nums):
+        current_sum=x
+        for  y in nums[i+1:]:
+            current_sum = current_sum + y
+            if current_sum&gt;best_sum:
+                best_sum = current_sum
+
+    return best_sum    
+</code></pre>
+
+<p>Basically, we calculate the following sums:</p>
+
+<blockquote>
+  <p>Fix the first value: -2
+1.1: -2+1 = -1 &lt;- best_sum
+1.2: -2+1-3 = -4
+1.3: -2+1-3+4 = 0 &lt;- best_sum
+1.4: -2+1-3+4-1 = -1
+….
+Fix the fourth value: 4
+4.1: 4-1 = 3
+4.2: 4-1+2 = 5 &lt;- best_sum
+4.3: 4-1+2+1 = 6 &lt;-  best_sum, this won’t change
+….</p>
+</blockquote>
+
+<h2 id="about-kadane">About Kadane:</h2>
+
+<p><a href="https://www.stat.cmu.edu/~kadane/">Joseph Kadane</a> is a mathematician that provided this algorithm to solve the maximum subarray sum problem in $O(n)$ time complexity:</p>
+
+<pre><code class="language-python=">def maxSubarraySum(numbers: List[int]) -&gt; int:
+    best_sum = nums[0]
+    current_sum = nums[0]
+
+    for x in nums[1:]:
+        current_sum = max(x, current_sum + x)
+        best_sum = max(best_sum, current_sum)
+    return best_sum
+</code></pre>
+
+<p>Easy? Not easy for me. Let’s dig deeper into why it works.</p>
+
+<p>The full sum array: Fix the first value: -2</p>
+<ol>
+  <li>$-2+1 = -1$ $\rightarrow$ The second value $1$  alone has a higher sum than $-2+1$, therefore we ditch the $-2$ and we begin counting from $1$ for a new subarray, <code class="language-plaintext highlighter-rouge">current_sum=1</code>, <code class="language-plaintext highlighter-rouge">best_sum=1</code></li>
+  <li>$1-3 = -2$ $\rightarrow$ The third value is lower than the sum with the previous <code class="language-plaintext highlighter-rouge">current_value</code> ($-2&gt;-3$), we continue a new subarray from last step. <code class="language-plaintext highlighter-rouge">current_sum=-2</code>, <code class="language-plaintext highlighter-rouge">best_sum=1</code></li>
+  <li>$1-3+4 = 2$ $\rightarrow$  The 4th value updates the <code class="language-plaintext highlighter-rouge">current_value</code> to $4$ and the <code class="language-plaintext highlighter-rouge">best_value</code> to $4$. This resets the subarray we were adding because $4$ alone has a higher sum than $1-3+4$.</li>
+  <li>$4-1 = 1$ $\rightarrow$ <code class="language-plaintext highlighter-rouge">current_sum=1</code>, <code class="language-plaintext highlighter-rouge">best_sum=4</code></li>
+  <li>$4-1 + 2 = 5$ $\rightarrow$ <code class="language-plaintext highlighter-rouge">current_sum=5</code>, <code class="language-plaintext highlighter-rouge">best_sum=5</code></li>
+  <li>$4-1 + 2 + 1= 6$ $\rightarrow$ <code class="language-plaintext highlighter-rouge">current_sum=6</code>, <code class="language-plaintext highlighter-rouge">best_sum=6</code>, after this <code class="language-plaintext highlighter-rouge">best_sum</code> won’t be updated again.</li>
+  <li>$4-1 + 2 + 1 -1 = 5$ $\rightarrow$ <code class="language-plaintext highlighter-rouge">current_sum=5</code>, <code class="language-plaintext highlighter-rouge">best_sum=6</code></li>
+  <li>$4-1 + 2 + 1 -1 -5  = 0$ $\rightarrow$ <code class="language-plaintext highlighter-rouge">current_sum=0</code>, <code class="language-plaintext highlighter-rouge">best_sum=6</code></li>
+  <li>$4-1 + 2 + 1 -1 -5 + 4 = 4$ $\rightarrow$ <code class="language-plaintext highlighter-rouge">current_sum=4</code>, <code class="language-plaintext highlighter-rouge">best_sum=6</code></li>
+</ol>
+
+<p>If we had an extra number (less than 2), we would have to update the subarray we were adding.</p>
+
+<p>In general, in line 6 of the Kadane implementation we decide to switch to another subarray, this happens in step 2 and 3. Meanwhile, line 7 keeps the highest sum we got so far.</p>
+
+  </div>
+
+  <div class="date">
+    <i class="fa fa-calendar fa-fw" aria-hidden="true"></i>&nbsp;Date:<span style="color: #333333; font-weight: normal;">&nbsp;May 11, 2022</span>
+  </div>
+
+  <div class="post-categories">
+    <i class="fa fa-tags fa-fw" aria-hidden="true"></i>&nbsp;Tags:&nbsp;
+      
+      
+      <a class="categories-button"<a href="/categories/#coding">coding</a>
+      
+      
+      <a class="categories-button"<a href="/categories/#leetcode">leetcode</a>
+      
+      
+  </div>
+
+  <div class="share-post">
+    <i class="fa fa-share-alt-square fa-fw" aria-hidden="true"></i>&nbsp;Share:&nbsp;
+    <!-- Sharingbutton Facebook -->
+<a class="resp-sharing-button__link" href="https://facebook.com/sharer/sharer.php?u=http://localhost:4000/coding/leetcode/2022/05/11/Kadane/" title="Share on Facebook" target="_blank" rel="noopener" aria-label="">
+  <div class="resp-sharing-button resp-sharing-button--facebook resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg>
+    </div>
+  </div>
+</a>
+
+<!-- Sharingbutton Twitter -->
+<a class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Kadane's Algorithm & LeetCode 53 Maximum Subarray&amp;url=http://localhost:4000/coding/leetcode/2022/05/11/Kadane/" title="Share on Twitter" target="_blank" rel="noopener" aria-label="">
+  <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.44 4.83c-.8.37-1.5.38-2.22.02.93-.56.98-.96 1.32-2.02-.88.52-1.86.9-2.9 1.1-.82-.88-2-1.43-3.3-1.43-2.5 0-4.55 2.04-4.55 4.54 0 .36.03.7.1 1.04-3.77-.2-7.12-2-9.36-4.75-.4.67-.6 1.45-.6 2.3 0 1.56.8 2.95 2 3.77-.74-.03-1.44-.23-2.05-.57v.06c0 2.2 1.56 4.03 3.64 4.44-.67.2-1.37.2-2.06.08.58 1.8 2.26 3.12 4.25 3.16C5.78 18.1 3.37 18.74 1 18.46c2 1.3 4.4 2.04 6.97 2.04 8.35 0 12.92-6.92 12.92-12.93 0-.2 0-.4-.02-.6.9-.63 1.96-1.22 2.56-2.14z"/></svg>
+    </div>
+  </div>
+</a>
+
+<!-- Sharingbutton E-Mail -->
+<a class="resp-sharing-button__link" href="mailto:?subject=Kadane's Algorithm & LeetCode 53 Maximum Subarray&body=You can read more at this site%2C%0Ahttp://localhost:4000/coding/leetcode/2022/05/11/Kadane/" title="Share via E-Mail" target="_self" rel="noopener" aria-label="">
+  <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22 4H2C.9 4 0 4.9 0 6v12c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM7.25 14.43l-3.5 2c-.08.05-.17.07-.25.07-.17 0-.34-.1-.43-.25-.14-.24-.06-.55.18-.68l3.5-2c.24-.14.55-.06.68.18.14.24.06.55-.18.68zm4.75.07c-.1 0-.2-.03-.27-.08l-8.5-5.5c-.23-.15-.3-.46-.15-.7.15-.22.46-.3.7-.14L12 13.4l8.23-5.32c.23-.15.54-.08.7.15.14.23.07.54-.16.7l-8.5 5.5c-.08.04-.17.07-.27.07zm8.93 1.75c-.1.16-.26.25-.43.25-.08 0-.17-.02-.25-.07l-3.5-2c-.24-.13-.32-.44-.18-.68s.44-.32.68-.18l3.5 2c.24.13.32.44.18.68z"/></svg>
+    </div>
+  </div>
+</a>
+
+
+<!-- Sharingbutton LinkedIn -->
+<a class="resp-sharing-button__link" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http://localhost:4000/coding/leetcode/2022/05/11/Kadane/&amp;title=Kadane's Algorithm & LeetCode 53 Maximum Subarray&amp;summary=Kadane's Algorithm & LeetCode 53 Maximum Subarray&amp;source=http://localhost:4000/coding/leetcode/2022/05/11/Kadane/" title="Share on LinkedIn" target="_blank" rel="noopener" aria-label="">
+  <div class="resp-sharing-button resp-sharing-button--linkedin resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.3 1.5 4s1-2.4 2.5-2.4c1.6 0 2.5 1 2.6 2.5 0 1.4-1 2.5-2.6 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5V10s1.6-1.5 4-1.5c3 0 5 2.2 5 6.3v6.7h-5v-7c0-1-1-2-2-2z"/></svg>
+    </div>
+  </div>
+</a>
+
+<!-- Sharingbutton Reddit -->
+<a class="resp-sharing-button__link" href="https://reddit.com/submit/?url=http://localhost:4000/coding/leetcode/2022/05/11/Kadane/&amp;resubmit=true&amp;title=Kadane's Algorithm & LeetCode 53 Maximum Subarray" title="Share on Reddit" target="_blank" rel="noopener" aria-label="">
+  <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 11.5c0-1.65-1.35-3-3-3-.96 0-1.86.48-2.42 1.24-1.64-1-3.75-1.64-6.07-1.72.08-1.1.4-3.05 1.52-3.7.72-.4 1.73-.24 3 .5C17.2 6.3 18.46 7.5 20 7.5c1.65 0 3-1.35 3-3s-1.35-3-3-3c-1.38 0-2.54.94-2.88 2.22-1.43-.72-2.64-.8-3.6-.25-1.64.94-1.95 3.47-2 4.55-2.33.08-4.45.7-6.1 1.72C4.86 8.98 3.96 8.5 3 8.5c-1.65 0-3 1.35-3 3 0 1.32.84 2.44 2.05 2.84-.03.22-.05.44-.05.66 0 3.86 4.5 7 10 7s10-3.14 10-7c0-.22-.02-.44-.05-.66 1.2-.4 2.05-1.54 2.05-2.84zM2.3 13.37C1.5 13.07 1 12.35 1 11.5c0-1.1.9-2 2-2 .64 0 1.22.32 1.6.82-1.1.85-1.92 1.9-2.3 3.05zm3.7.13c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9.8 4.8c-1.08.63-2.42.96-3.8.96-1.4 0-2.74-.34-3.8-.95-.24-.13-.32-.44-.2-.68.15-.24.46-.32.7-.18 1.83 1.06 4.76 1.06 6.6 0 .23-.13.53-.05.67.2.14.23.06.54-.18.67zm.2-2.8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm5.7-2.13c-.38-1.16-1.2-2.2-2.3-3.05.38-.5.97-.82 1.6-.82 1.1 0 2 .9 2 2 0 .84-.53 1.57-1.3 1.87z"/></svg>
+    </div>
+  </div>
+</a>
+
+<!-- Sharingbutton Telegram -->
+<a class="resp-sharing-button__link" href="https://telegram.me/share/url?text=Kadane's Algorithm & LeetCode 53 Maximum Subarray&amp;url=http://localhost:4000/coding/leetcode/2022/05/11/Kadane/" title="Share via Telegram" target="_blank" rel="noopener" aria-label="">
+  <div class="resp-sharing-button resp-sharing-button--telegram resp-sharing-button--small"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.707 8.475C.275 8.64 0 9.508 0 9.508s.284.867.718 1.03l5.09 1.897 1.986 6.38a1.102 1.102 0 0 0 1.75.527l2.96-2.41a.405.405 0 0 1 .494-.013l5.34 3.87a1.1 1.1 0 0 0 1.046.135 1.1 1.1 0 0 0 .682-.803l3.91-18.795A1.102 1.102 0 0 0 22.5.075L.706 8.475z"/></svg>
+    </div>
+  </div>
+</a>
+
+  </div>
+
+  <div class="related-posts">
+    <div class="related-posts">
+<span class="related-posts-heading">Related Posts:</span><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    
+  
+  
+
+  
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+
+  
+
+  
+  
+
+
+
+
+  
+    <div class="related-posts-post">
+  <a href="/coding/c++/cpp/2022/05/25/cpp-istringstream/">
+    C++ - std::istringstream
+  </a>
+</div>
+
+
+    
+  
+
+  
+    <div class="related-posts-post">
+  <a href="/coding/c++/cpp/2022/05/17/cpp-stuff-i-found-hard/">
+    C++ - Static Data Members & Static Functions
+  </a>
+</div>
+
+
+    
+  
+
+  
+
+  
+    <div class="related-posts-post">
+  <a href="/coding/sql/2022/03/20/mysql-notes/">
+    SQL Notes
+  </a>
+</div>
+
+
+    
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+
+
+
+
+</div>
+
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav">
+  <p>
+    
+    <span class="post-nav-label">Previous</span><br>
+    <a href="/coding/sql/2022/03/20/mysql-notes/">SQL Notes</a>
+    
+  </p>
+  <p>
+    
+    <span class="post-nav-label">Next</span><br>
+    <a href="/coding/c++/cpp/2022/05/17/cpp-stuff-i-found-hard/">C++ - Static Data Members & Static Functions</a>
+    
+  </p>
+</div>
+
+  </div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer"><div class="social-icons"><a class="social-icon" href="/contact.html"><i class="fa fa-envelope-square fa-2x" title="Email"></i></a><a class="social-icon" href="https://twitter.com/pomberorajy"><i class="fa fa-twitter-square fa-2x" title="Twitter"></i></a><a class="social-icon" href="https://github.com/astrocronopio"><i class="fa fa-github-square fa-2x" title="GitHub"></i></a><a class="social-icon" href="https://www.linkedin.com/in/evelyn-coronel/"><i class="fa fa-linkedin-square fa-2x" title="LinkedIn"></i></a></div><div class="copyright">
+            
+            <p>&copy; 2022 evelyn@home. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/forever-jekyll/forever-jekyll" rel="nofollow">Forever Jekyll</a>.</p>
+            
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <script defer src="https://cdn.plyr.io/3.6.5/plyr.js"></script>
+    <script>
+      const player = new Plyr("#player", { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3, modestbranding: 1, playsinline: 1 , enablejsapi: 1, autoplay: 0, focused: true, global: false });
+      window.player = player;
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+    <script type="text/javascript">
+      const lightbox = GLightbox({
+          touchNavigation: true,
+          loop: true,
+          autoplayVideos: true
+      });
+    </script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.js" integrity="sha384-GxNFqL3r9uRJQhR+47eDxuPoNE7yLftQM8LcxzgS4HT73tp970WS/wV5p8UzCOmb" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body,{
+                    delimiters: [
+                    { left: '$$',  right: '$$',  display: true  },
+                    { left: '$',   right: '$',   display: false },
+                    { left: '\\[', right: '\\]', display: true  },
+                    { left: '\\(', right: '\\)', display: false }
+                    ]});">
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+    <script>
+      function addDarkmodeWidget() {
+        new Darkmode().showWidget();
+        window.addEventListener('load', addDarkmodeWidget);
+      }
+      const options = {
+        label: '🌙',
+      }
+      const darkmode = new Darkmode(options);
+            darkmode.showWidget();
+    </script>
+
+  </body>
+</html>
